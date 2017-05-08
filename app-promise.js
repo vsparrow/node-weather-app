@@ -20,18 +20,23 @@ const argv = yargs
     .alias("help", "h")
     .argv;
 // ***************************************************************************** end yargs
+var address = "";
+(argv.address != "") ? address = argv.address : address = argv.default;
+console.log("This is address: " + address);
 
-var encodedAddress = encodeURIComponent(argv.address);
+// var encodedAddress = encodeURIComponent(argv.address);
+var encodedAddress = encodeURIComponent(address);
 var geocodeUrl = `http://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
 
 
 // ***************************************************************************** option d
 
-console.log("argv.address is " +argv.address)
-console.log(argv);
+// console.log("argv.address is " +argv.address)
+// console.log(argv);
 if(argv.d != undefined) {
     console.log("YOU CHOSE TO CREATE A DEFAULT ADDRESS");
     //write to default.address
+    
     fs.writeFileSync("./default.address",argv.d);
     
     
