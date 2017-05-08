@@ -1,22 +1,23 @@
-var yargs = require("yargs");
-const axios = require("axios");
-const fs = require("fs");
-var demandAddress = true;
-var defaultAddressFileExists = false;
-var fileAddress = "";
+//  app will demand address unless file default.address exists
+//  if no arguments given it will read the address from the default address file
+//  if arguments given, app will use arguments instead
 
-defaultAddressFileExists = fs.existsSync("./default.address")
-console.log(`Does file default.address exist? ${defaultAddressFileExists}`);
+var yargs = require("yargs");           //required for parsing arguments
+const axios = require("axios");         //required for http requests
+const fs = require("fs");               //required for file functions
 
-//read file adddress into var fileAddress
-if(defaultAddressFileExists){
+var demandAddress = true;               //by default demand address from user
+var defaultAddressFileExists = false;   //does address file exist? default is false
+var fileAddress = "";                   //address from file will go here
+var address = "";
+
+defaultAddressFileExists = fs.existsSync("./default.address") //get true or false
+if(defaultAddressFileExists){           //read file adddress into var fileAddress
     fileAddress = fs.readFileSync("./default.address");
-    console.log("Address from file is:" + fileAddress);
-    demandAddress = false;
+    demandAddress = false;              //if the file exists we dont demand address from user
 }
 
-
-
+// ***************************************************************************** start yargs
 const argv = yargs
     .options({
         a: {
@@ -35,48 +36,22 @@ const argv = yargs
     .alias("help", "h")
     .argv;
 // ***************************************************************************** end yargs
-var address = "";
-if(argv.address == undefined && argv.default== undefined){address = fileAddress}
-else {(argv.address != "") ? address = argv.address : address = argv.default}
-
-
-console.log("This is address: " + address);
-
-// var encodedAddress = encodeURIComponent(argv.address);
-var encodedAddress = encodeURIComponent(address);
-var geocodeUrl = `http://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
-
 
 // ***************************************************************************** option d
 
-// console.log("argv.address is " +argv.address)
-// console.log(argv);
 if(argv.d != undefined) {
     console.log("YOU CHOSE TO CREATE A DEFAULT ADDRESS");
-    //write to default.address
-    
-    fs.writeFileSync("./default.address",argv.d);
-    
-    
+    if(argv.d === "") {argv.d = argv.a} //if argv.d came in blank but exists, use arg.a's data
+    fs.writeFileSync("./default.address",argv.d); //write to default.address
 }
 // ***************************************************************************** end option d
 
+//set the address 
+if(argv.address == undefined && argv.default== undefined){ address = fileAddress}
+else {(argv.address != "") ? address = argv.address : address = argv.default}
 
-
-
-
-
-
-//console.log(argv.address); //undefined if no address given.
-
-// console.log(encodedAddress);
-// if(argv.address === undefined)
-//     {
-//         console.log("Please use option -a to add an address")
-//         console.log("Else, please use option -d to add an default address so you wont have to type it again")
-//     }
-
-// else {//************************************************************************
+var encodedAddress = encodeURIComponent(address);
+var geocodeUrl = `http://maps.googleapis.com/maps/api/geocode/json?address=${encodedAddress}`;
 
 // ***************************************************************************** axios http request
     axios.get(geocodeUrl).then((response)=>{
@@ -104,20 +79,3 @@ if(argv.d != undefined) {
         // console.log(error)
     }); 
 // } //end else *******************************************************************
-
-
-//axios knows how to automatically parse json data
-//what get returns is actually a promise -> we can use  .then to run some code when a promise is fulfilled or rejected
-//success case: axios library recommends you calll it response
-//add catch after try to catch all the errors  axios.get(url).then((response)=>{}).catch((error)=>{})
-
-
-
-//promise
-// can chain multiple then and have one catch at the end   axios.get().then().then().then().catch() 
-// one reason why people like promises over callbacks is instead of nesting, you chain // no crazy indentation
-
-// TO THROW ERROR  our promise can catch // to create error from result that we know is erronus but promise doesnt
-// throw new Error("error message here")
-// console.log(error.message) to print error above, console should be in catch
-
