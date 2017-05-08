@@ -1,11 +1,26 @@
 var yargs = require("yargs");
 const axios = require("axios");
 const fs = require("fs");
+var demandAddress = true;
+var defaultAddressFileExists = false;
+// var fileAddress = "";
+
+//fs.existSync depricated in older versions of node, so will use alternate method.
+//fs.existsSync("default.address",(exists)=>{ console.log("return of exist: " + exists)    //defaultAddressFileExists = true})
+// fs.statSync("./default.address",(error,stat)=>{
+
+// fs.readFileSync("./default.address",(error,stat)=>{
+//     if(error)     {throw error}
+// }).catch((error)=>{console.log(`error is: ${error}`)})
+
+// console.log(fs.existsSync("./default.address"));
+defaultAddressFileExists = fs.existsSync("./default.address")
+console.log(`Does file default.address exist? ${defaultAddressFileExists}`);
 
 const argv = yargs
     .options({
         a: {
-            demand : true,   
+            demand : demandAddress,   
             alias : "address",
             describe : "Address to fetch weather for",
             string : true //tells yargs to always parse address as a string
