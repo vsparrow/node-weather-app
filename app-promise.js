@@ -39,11 +39,14 @@ const argv = yargs
 
 // ***************************************************************************** option d
 
-if(argv.d != undefined) {
+if(argv.default != undefined) {
     console.log("YOU CHOSE TO CREATE A DEFAULT ADDRESS");
-    if(argv.d === "") {argv.d = argv.a} //if argv.d came in blank but exists, use arg.a's data
-    fs.writeFileSync("./default.address",argv.d); //write to default.address
+    if(argv.default === "") {argv.default = argv.address} //if argv.d came in blank but exists, use arg.a's data
+    fs.writeFileSync("./default.address",argv.default); //write to default.address
 }
+
+ //if given default but not address , set address to default
+if(argv.address ===  undefined){argv.address = argv.default}
 // ***************************************************************************** end option d
 
 //set the address 
