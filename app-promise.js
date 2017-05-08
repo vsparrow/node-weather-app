@@ -1,6 +1,6 @@
 var yargs = require("yargs");
 const axios = require("axios");
-
+const fs = require("fs");
 
 const argv = yargs
     .options({
@@ -30,7 +30,11 @@ var geocodeUrl = `http://maps.googleapis.com/maps/api/geocode/json?address=${enc
 console.log("argv.address is " +argv.address)
 console.log(argv);
 if(argv.d != undefined) {
-    console.log("YOU CHOSE TO CREATE A DEFAULT ADDRESS")
+    console.log("YOU CHOSE TO CREATE A DEFAULT ADDRESS");
+    //write to default.address
+    fs.writeFileSync("./default.address",argv.d);
+    
+    
 }
 // ***************************************************************************** end option d
 
