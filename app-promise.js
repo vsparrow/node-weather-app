@@ -3,19 +3,17 @@ const axios = require("axios");
 const fs = require("fs");
 var demandAddress = true;
 var defaultAddressFileExists = false;
-// var fileAddress = "";
+var fileAddress = "";
 
-//fs.existSync depricated in older versions of node, so will use alternate method.
-//fs.existsSync("default.address",(exists)=>{ console.log("return of exist: " + exists)    //defaultAddressFileExists = true})
-// fs.statSync("./default.address",(error,stat)=>{
-
-// fs.readFileSync("./default.address",(error,stat)=>{
-//     if(error)     {throw error}
-// }).catch((error)=>{console.log(`error is: ${error}`)})
-
-// console.log(fs.existsSync("./default.address"));
 defaultAddressFileExists = fs.existsSync("./default.address")
 console.log(`Does file default.address exist? ${defaultAddressFileExists}`);
+
+//read file adddress into var fileAddress
+if(defaultAddressFileExists){fileAddress = fs.readFileSync("./default.address");
+    console.log("Address from file is:" + fileAddress);
+}
+
+
 
 const argv = yargs
     .options({
