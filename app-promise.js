@@ -9,8 +9,10 @@ defaultAddressFileExists = fs.existsSync("./default.address")
 console.log(`Does file default.address exist? ${defaultAddressFileExists}`);
 
 //read file adddress into var fileAddress
-if(defaultAddressFileExists){fileAddress = fs.readFileSync("./default.address");
+if(defaultAddressFileExists){
+    fileAddress = fs.readFileSync("./default.address");
     console.log("Address from file is:" + fileAddress);
+    demandAddress = false;
 }
 
 
@@ -34,7 +36,10 @@ const argv = yargs
     .argv;
 // ***************************************************************************** end yargs
 var address = "";
-(argv.address != "") ? address = argv.address : address = argv.default;
+if(argv.address == undefined && argv.default== undefined){address = fileAddress}
+else {(argv.address != "") ? address = argv.address : address = argv.default}
+
+
 console.log("This is address: " + address);
 
 // var encodedAddress = encodeURIComponent(argv.address);
